@@ -1,6 +1,4 @@
-Peço desculpas pela confusão anterior. Aqui está o arquivo README.md completo:
 
-```markdown
 # Projeto de Gerenciamento de Usuários
 
 ## Descrição
@@ -114,5 +112,5 @@ Se você quiser contribuir para este projeto, por favor, faça um fork do reposi
 
 Sem licença.
 
-```
+
 
