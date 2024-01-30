@@ -18,7 +18,13 @@ import com.r1cardoPereira.demoparkapi.web.dto.UsuarioCreateDto;
 import com.r1cardoPereira.demoparkapi.web.dto.UsuarioResponseDto;
 import com.r1cardoPereira.demoparkapi.web.dto.UsuarioSenhaDto;
 import com.r1cardoPereira.demoparkapi.web.dto.mapper.UsuarioMapper;
+import com.r1cardoPereira.demoparkapi.web.exception.ErrorMessage;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +35,8 @@ import lombok.RequiredArgsConstructor;
  * Ela usa a anotação @RequestMapping para mapear as requisições para "api/v1/usuarios".
  * Ela usa a anotação @RequiredArgsConstructor para gerar automaticamente um construtor com um parâmetro para cada campo final na classe.
  */
+
+@Tag(name = "Usuarios", description = "Contém todas as operações relativas aos recursos para cadastro, edição e leitura de um usuário")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/usuarios")
@@ -39,13 +47,40 @@ public class UsuarioController {
      */
     private final UsuarioService usuarioService;
 
+    
+    
+    
+    
+    
+    
     /**
      * Este método manipula as requisições POST para criar um novo usuário.
      * 
      * @param usuarioCreateDto O DTO com os dados do usuário a ser criado.
      * @return Uma resposta com o status 201 (Created) e o usuário criado.
      */
-    @PostMapping
+    
+    
+    @Operation(
+        summary = "Criar um novo Usuário",
+        description = "Recurso para criar um novo usuário",
+        responses = {
+            
+            @ApiResponse(responseCode = "201", description = "Recurso criado com sucesso",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = UsuarioResponseDto.class))),
+            
+            @ApiResponse(responseCode = "409", description = "Usuário e-mail já cadastrado no sistema",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class))),
+            
+            @ApiResponse(responseCode = "422", description = "Recurso não processado por dados de entrada invalidos",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class)))
+            })
+
+
+     @PostMapping
     public ResponseEntity<UsuarioResponseDto> create(@Valid @RequestBody UsuarioCreateDto usuarioCreateDto) {
 
         Usuario user = usuarioService.save(UsuarioMapper.toUsuario(usuarioCreateDto));
@@ -53,12 +88,32 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toDto(user));
     }
 
+    
+    
+    
+    
     /**
      * Este método manipula as requisições GET para buscar um usuário pelo ID.
      * 
      * @param id O ID do usuário a ser buscado.
      * @return Uma resposta com o status 200 (OK) e o usuário encontrado.
      */
+
+     @Operation(
+        summary = "Recuperar Usuario pelo ID",
+        description = "Recupera Usuario com apartir do Id no parametro da requisição",
+        responses = {
+            
+            @ApiResponse(responseCode = "200", description = "Recurso encontrado com sucesso",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = UsuarioResponseDto.class))),
+            
+            
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado.",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class)))
+            })
+
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDto> getUserById(@PathVariable Long id) {
 
@@ -68,11 +123,27 @@ public class UsuarioController {
 
     }
 
+    
+    
+    
+    
     /**
      * Este método manipula as requisições GET para buscar todos os usuários.
      * 
      * @return Uma resposta com o status 200 (OK) e a lista de usuários.
      */
+    
+     @Operation(
+        summary = "Listar todos os Usuários",
+        description = "Recurso para listar todos os usuários.",
+        responses = {
+            
+        @ApiResponse(responseCode = "200", description = "Usuários listados com sucesso.",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = UsuarioCreateDto.class)))
+            })
+    
+    
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDto>> getAll() {
 
@@ -81,6 +152,10 @@ public class UsuarioController {
 
     }
 
+    
+    
+    
+    
     /**
      * Este método manipula as requisições PATCH para atualizar a senha de um usuário pelo ID.
      * 
@@ -88,6 +163,28 @@ public class UsuarioController {
      * @param dto O DTO com a senha atual, a nova senha e a confirmação da nova senha.
      * @return Uma resposta com o status 204 (No Content).
      */
+
+    @Operation(
+        summary = "Altera senha do Usuario",
+        description = "Recurso para criar um novo usuário",
+        responses = {
+            
+            @ApiResponse(responseCode = "204", description = "Senha Alterada com Sucesso",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = Void.class))),
+            
+            @ApiResponse(responseCode = "400", description = "Senha não confere...",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class))),
+            
+            @ApiResponse(responseCode = "404", description = "Recurso invalido...",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class))),
+            
+            @ApiResponse(responseCode = "422", description = "Campos invalidos ou mal formatados.",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updatePasswordById (@PathVariable Long id, @Valid @RequestBody UsuarioSenhaDto dto) {
         Usuario user = usuarioService.updatePassword(id,dto.getSenhaAtual(),dto.getNovaSenha(),dto.getConfirmaSenha());

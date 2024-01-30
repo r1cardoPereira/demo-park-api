@@ -7,6 +7,7 @@ com/r1cardoPereira/demoparkapi/web/dto/UsuarioResponseDto.class
 com/r1cardoPereira/demoparkapi/exception/PasswordInvalidException.class
 com/r1cardoPereira/demoparkapi/web/controller/UsuarioController.class
 com/r1cardoPereira/demoparkapi/web/exception/ApiExceptionHandler.class
+com/r1cardoPereira/demoparkapi/config/SpringDocOpenApiConfig.class
 com/r1cardoPereira/demoparkapi/DemoParkApiApplication.class
 com/r1cardoPereira/demoparkapi/web/dto/mapper/UsuarioMapper.class
 com/r1cardoPereira/demoparkapi/exception/EntityNotFoundException.class

@@ -7,6 +7,7 @@
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/dto/mapper/UsuarioMapper.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/config/SpringTimeZoneConfig.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/exception/EntityNotFoundException.java
+/home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/config/SpringDocOpenApiConfig.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/exception/PasswordInvalidException.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/dto/UsuarioResponseDto.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/controller/UsuarioController.java
