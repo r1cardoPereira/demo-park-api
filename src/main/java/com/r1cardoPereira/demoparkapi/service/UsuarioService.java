@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.r1cardoPereira.demoparkapi.entity.Usuario;
+import com.r1cardoPereira.demoparkapi.entity.Usuario.Role;
 import com.r1cardoPereira.demoparkapi.exception.EntityNotFoundException;
 import com.r1cardoPereira.demoparkapi.exception.PasswordInvalidException;
 import com.r1cardoPereira.demoparkapi.exception.UsernameUniqueViolationException;
@@ -94,5 +95,32 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public List<Usuario> getAll() {
         return usuarioRepository.findAll();
+    }
+
+
+    /**
+     * Este método busca um usuário pelo nome de usuário.
+     * Ele usa a anotação @Transactional(readOnly = true) para indicar que é uma operação de leitura transacional.
+     * 
+     * @param username O nome de usuário do usuário a ser buscado.
+     * @return O usuário encontrado.
+     * @throws EntityNotFoundException se o usuário não for encontrado.
+     */
+    @Transactional(readOnly = true)
+    public Usuario buscarPorUsername(String username) {
+        return usuarioRepository.findByUsername(username).orElseThrow(
+        () -> new EntityNotFoundException(String.format("Usuario com %s não encontrado", username)));
+    }
+
+    /**
+     * Este método busca o papel de um usuário pelo nome de usuário.
+     * Ele usa a anotação @Transactional(readOnly = true) para indicar que é uma operação de leitura transacional.
+     * 
+     * @param username O nome de usuário do usuário cujo papel está sendo buscado.
+     * @return O papel do usuário.
+     */
+    @Transactional(readOnly = true)
+    public Usuario.Role buscarRolePorUsername(String username) {
+        return usuarioRepository.findRoleByUsername(username);
     }
 }
