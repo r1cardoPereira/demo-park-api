@@ -19,7 +19,7 @@ public class JwtUtils {
     // Constantes usadas na criação e validação do token JWT.
     public static final String JWT_BEARER = "Bearer "; // Prefixo do token JWT.
     public static final String JTW_AUTHORIZATION = "Authorization"; // Cabeçalho HTTP onde o token JWT é enviado.
-    public static final String SECRET_KEY = "25688514S-LDPYDVH52-LFJBM6562"; // Chave secreta usada para assinar o token
+    public static final String SECRET_KEY = "256885104S-LDPYDVH052-LFJBM60562"; // Chave secreta usada para assinar o token
                                                                              // JWT.
     public static final long EXPIRE_DAYS = 0; // Número de dias até o token JWT expirar.
     public static final long EXPIRE_HOURS = 0; // Número de horas até o token JWT expirar.

@@ -1,10 +1,14 @@
+/home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/jwt/JwtUserDetailsService.java
+/home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/jwt/JwtToken.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/dto/UsuarioCreateDto.java
+/home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/jwt/JwtUserDetails.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/DemoParkApiApplication.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/dto/UsuarioSenhaDto.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/exception/ErrorMessage.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/service/UsuarioService.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/entity/Usuario.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/dto/mapper/UsuarioMapper.java
+/home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/dto/UsuarioLoginDto.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/config/SpringTimeZoneConfig.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/exception/EntityNotFoundException.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/config/SpringDocOpenApiConfig.java
@@ -12,6 +16,9 @@
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/dto/UsuarioResponseDto.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/config/SpringSecurityConfig.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/controller/UsuarioController.java
+/home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/jwt/JwtUtils.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/exception/UsernameUniqueViolationException.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/exception/ApiExceptionHandler.java
+/home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/jwt/JwtAuthorizationFilter.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/repository/UsuarioRepository.java
+/home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/controller/AuthenticacaoController.java
