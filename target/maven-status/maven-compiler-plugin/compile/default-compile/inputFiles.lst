@@ -18,6 +18,7 @@
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/dto/UsuarioLoginDto.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/config/SpringTimeZoneConfig.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/exception/EntityNotFoundException.java
+/home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/jwt/JwtAuthenticationEntryPoint.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/config/SpringDocOpenApiConfig.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/config/SpringSecurityConfig.java
 /home/dev/Projetos_JAVA/demo-park-api/src/main/java/com/r1cardoPereira/demoparkapi/web/exception/ApiExceptionHandler.java

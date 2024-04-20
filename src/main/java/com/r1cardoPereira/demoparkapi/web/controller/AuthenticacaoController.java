@@ -13,13 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.r1cardoPereira.demoparkapi.jwt.JwtToken;
 import com.r1cardoPereira.demoparkapi.jwt.JwtUserDetailsService;
 import com.r1cardoPereira.demoparkapi.web.dto.UsuarioLoginDto;
+import com.r1cardoPereira.demoparkapi.web.dto.UsuarioResponseDto;
 import com.r1cardoPereira.demoparkapi.web.exception.ErrorMessage;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "Autenticação", description = "Recurso para proceder com a autenticação na API" )
 
 @Slf4j // Anotação do Lombok para criar um logger SLF4J.
 @RequiredArgsConstructor // Anotação do Lombok para gerar um construtor com parâmetros obrigatórios (final ou @NonNull).
@@ -29,6 +36,26 @@ public class AuthenticacaoController { // Declaração da classe AuthenticacaoCo
 
     private final JwtUserDetailsService detailsService; // Injeção de dependência para o serviço de detalhes do usuário JWT.
     private final AuthenticationManager authenticationManager; // Injeção de dependência para o gerenciador de autenticação.
+
+@Operation(
+        summary = "Autenticar API",
+        description = "Recurso de autenticação na API",
+        responses = {
+            
+            @ApiResponse(responseCode = "200", description = "Autenticação realizada com sucesso e retorno de um bearer code",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = UsuarioResponseDto.class))),
+            
+            
+            @ApiResponse(responseCode = "400", description = "Credenciais inválidas",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class))),
+            
+            
+            @ApiResponse(responseCode = "422", description = "Campo(s) inválido(s)",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class)))
+            })
 
     @PostMapping("/auth") // Anotação do Spring para mapear requisições POST para o método autenticar().
     public ResponseEntity<?> autenticar(@RequestBody @Valid UsuarioLoginDto dto, HttpServletRequest request ){ // Método para autenticar um usuário.
