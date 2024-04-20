@@ -12,7 +12,6 @@ import com.r1cardoPereira.demoparkapi.exception.PasswordInvalidException;
 import com.r1cardoPereira.demoparkapi.exception.UsernameUniqueViolationException;
 import com.r1cardoPereira.demoparkapi.repository.UsuarioRepository;
 
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -27,8 +26,9 @@ public class UsuarioService {
         try {
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             return usuarioRepository.save(usuario);
-        }catch (org.springframework.dao.DataIntegrityViolationException ex){
-            throw new UsernameUniqueViolationException(String.format("Username {%s} já Cadastrado", usuario.getUsername()));
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            throw new UsernameUniqueViolationException(
+                    String.format("Username {%s} já Cadastrado", usuario.getUsername()));
         }
     }
 
@@ -60,7 +60,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Usuario buscarPorUsername(String username) {
         return usuarioRepository.findByUsername(username).orElseThrow(
-        () -> new EntityNotFoundException(String.format("Usuario com %s não encontrado", username)));
+                () -> new EntityNotFoundException(String.format("Usuario com %s não encontrado", username)));
     }
 
     @Transactional(readOnly = true)

@@ -4,6 +4,7 @@ com/r1cardoPereira/demoparkapi/entity/Usuario$Role.class
 com/r1cardoPereira/demoparkapi/web/dto/UsuarioLoginDto.class
 com/r1cardoPereira/demoparkapi/web/dto/UsuarioResponseDto.class
 com/r1cardoPereira/demoparkapi/jwt/JwtToken.class
+com/r1cardoPereira/demoparkapi/config/SpringJpaAuditungConfig.class
 com/r1cardoPereira/demoparkapi/config/SpringDocOpenApiConfig.class
 com/r1cardoPereira/demoparkapi/jwt/JwtUserDetailsService.class
 com/r1cardoPereira/demoparkapi/exception/EntityNotFoundException.class
