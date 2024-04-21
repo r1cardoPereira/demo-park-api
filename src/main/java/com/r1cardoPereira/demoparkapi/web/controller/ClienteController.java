@@ -1,6 +1,10 @@
 package com.r1cardoPereira.demoparkapi.web.controller;
 
 
+
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.r1cardoPereira.demoparkapi.entity.Cliente;
 import com.r1cardoPereira.demoparkapi.jwt.JwtUserDetails;
+import com.r1cardoPereira.demoparkapi.repository.projection.ClienteProjection;
 import com.r1cardoPereira.demoparkapi.service.ClienteService;
 import com.r1cardoPereira.demoparkapi.service.UsuarioService;
+import com.r1cardoPereira.demoparkapi.web.dto.ClienteCreateDto;
 import com.r1cardoPereira.demoparkapi.web.dto.ClienteResponseDto;
-import com.r1cardoPereira.demoparkapi.web.dto.mapper.ClienteCreateDto;
+import com.r1cardoPereira.demoparkapi.web.dto.PageableDto;
 import com.r1cardoPereira.demoparkapi.web.dto.mapper.ClienteMapper;
+import com.r1cardoPereira.demoparkapi.web.dto.mapper.PageableMapper;
 import com.r1cardoPereira.demoparkapi.web.exception.ErrorMessage;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,7 +81,7 @@ public class ClienteController {
         cliente.setUsuario(usuarioService.getByid(userDetails.getId()));
         clienteService.saveCliente(cliente);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ClienteMapper.tDto(cliente));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ClienteMapper.toDto(cliente));
     }
 
     
@@ -104,9 +111,35 @@ public class ClienteController {
     public ResponseEntity<ClienteResponseDto> getById(@PathVariable Long id){
 
         Cliente cliente = clienteService.buscarPorId(id);
-        return ResponseEntity.ok(ClienteMapper.tDto(cliente));
+        return ResponseEntity.ok(ClienteMapper.toDto(cliente));
 
     }
 
+    @Operation(
+        summary = "Listar todos os Clientes Cadastrados",
+        security = @SecurityRequirement(name ="Security"),
+        description = "Requisição exige Bearer Token. Acesso Restrito a ADMIN.",
+        responses = {
+            
+            
+        @ApiResponse(responseCode = "200", description = "Clientes listados com sucesso.",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ClienteCreateDto.class))),
+        
+        @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar este recurso",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class))),
+            })
     
+    
+    @GetMapping
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    public ResponseEntity<PageableDto> getAll(Pageable pageable) {
+
+        Page<ClienteProjection> clientes = clienteService.buscarTodos(pageable);
+        return ResponseEntity.ok(PageableMapper.toDto(clientes));
+
+    }
+
+
 }
