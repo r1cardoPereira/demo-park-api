@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.r1cardoPereira.demoparkapi.exception.CpfUniqueViolationException;
 import com.r1cardoPereira.demoparkapi.exception.EntityNotFoundException;
 import com.r1cardoPereira.demoparkapi.exception.PasswordInvalidException;
 import com.r1cardoPereira.demoparkapi.exception.UsernameUniqueViolationException;
@@ -75,7 +76,7 @@ public class ApiExceptionHandler {
      * @param request A requisição HTTP
      * @return Uma resposta HTTP com o status 409 (Conflict), indicando que a requisição não pôde ser concluída devido a um conflito com o estado atual do recurso.
      */
-    @ExceptionHandler(UsernameUniqueViolationException.class)
+    @ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class})
     public ResponseEntity<ErrorMessage> usernameUniqueViolationException(RuntimeException ex,
         HttpServletRequest request) {
 
