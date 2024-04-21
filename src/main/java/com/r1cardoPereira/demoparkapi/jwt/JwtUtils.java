@@ -23,7 +23,7 @@ public class JwtUtils {
                                                                              // JWT.
     public static final long EXPIRE_DAYS = 0; // Número de dias até o token JWT expirar.
     public static final long EXPIRE_HOURS = 0; // Número de horas até o token JWT expirar.
-    public static final long EXPIRE_MINUTES = 50; // Número de minutos até o token JWT expirar.
+    public static final long EXPIRE_MINUTES = 30; // Número de minutos até o token JWT expirar.
 
     // Construtor privado para evitar a criação de instâncias desta classe.
     private JwtUtils() {

@@ -84,7 +84,7 @@ public class UsuarioController {
             })
 
 
-     @PostMapping
+    @PostMapping
     public ResponseEntity<UsuarioResponseDto> create(@Valid @RequestBody UsuarioCreateDto usuarioCreateDto) {
 
         Usuario user = usuarioService.save(UsuarioMapper.toUsuario(usuarioCreateDto));
@@ -103,7 +103,7 @@ public class UsuarioController {
      * @return Uma resposta com o status 200 (OK) e o usuário encontrado.
      */
 
-     @Operation(
+    @Operation(
         summary = "Recuperar Usuario pelo ID",
         security = @SecurityRequirement(name ="Security"),
         description = "Requisição exige Bearer Token. Acesso Restrito a ADMIN|CLIENTE",
@@ -142,7 +142,7 @@ public class UsuarioController {
      * @return Uma resposta com o status 200 (OK) e a lista de usuários.
      */
     
-     @Operation(
+    @Operation(
         summary = "Listar todos os Usuários Cadastrados",
         security = @SecurityRequirement(name ="Security"),
         description = "Requisição exige Bearer Token. Acesso Restrito a ADMIN.",
