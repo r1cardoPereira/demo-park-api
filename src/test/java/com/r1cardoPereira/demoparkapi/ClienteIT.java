@@ -169,5 +169,61 @@ public class ClienteIT {
     }
 
 
+    @Test
+    public void buscarCLiente_ComIdExistente_RetornarCLienteComStatus200(){
+
+        ClienteResponseDto responseBody = testClient
+                                .get()
+                                .uri("/api/v1/clientes/10")
+                                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@email.com",
+                                                "123456"))
+                                .exchange()
+                                .expectStatus().isOk()
+                                .expectBody(ClienteResponseDto.class)
+                                .returnResult().getResponseBody();
+
+                Assertions.assertThat(responseBody).isNotNull();
+                Assertions.assertThat(responseBody.getId()).isEqualTo(10);
+                Assertions.assertThat(responseBody.getNome()).isEqualTo("Cliente um");
+                Assertions.assertThat(responseBody.getCpf()).isEqualTo("32268430014");
+
+    }
     
+    @Test
+    public void buscarCLiente_ComIdInexistente_RetornarErrorMessageComStatus404(){
+
+        ErrorMessage responseBody = testClient
+                                .get()
+                                .uri("/api/v1/clientes/13")
+                                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@email.com",
+                                                "123456"))
+                                .exchange()
+                                .expectStatus().isNotFound()
+                                .expectBody(ErrorMessage.class)
+                                .returnResult().getResponseBody();
+
+                Assertions.assertThat(responseBody).isNotNull();
+                Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+                
+
+    }
+
+    @Test
+    public void buscarCLiente_ComClienteNaoPermitido_RetornarErrorMessageComStatus403(){
+
+        ErrorMessage responseBody = testClient
+                                .get()
+                                .uri("/api/v1/clientes/10")
+                                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "client@email.com",
+                                                "123456"))
+                                .exchange()
+                                .expectStatus().isForbidden()
+                                .expectBody(ErrorMessage.class)
+                                .returnResult().getResponseBody();
+
+                Assertions.assertThat(responseBody).isNotNull();
+                Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+                
+
+    }
 }

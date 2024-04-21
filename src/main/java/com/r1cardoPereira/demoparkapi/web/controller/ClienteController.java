@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,6 +75,37 @@ public class ClienteController {
         clienteService.saveCliente(cliente);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ClienteMapper.tDto(cliente));
+    }
+
+    
+    
+    @Operation(
+        summary = "Buscar Cliente por ID",
+        description = "Recurso para listar cliente através do seu ID",
+        responses = {
+            
+            @ApiResponse(responseCode = "200", description = "Recurso encontrado com sucesso",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ClienteResponseDto.class))),
+            
+            
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class))),
+            
+            @ApiResponse(responseCode = "403", description = "Recurso não permitido ao Perfil CLIENTE",
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = ErrorMessage.class)))
+            
+            })
+    
+    @GetMapping("/{id}")
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    public ResponseEntity<ClienteResponseDto> getById(@PathVariable Long id){
+
+        Cliente cliente = clienteService.buscarPorId(id);
+        return ResponseEntity.ok(ClienteMapper.tDto(cliente));
+
     }
 
     
