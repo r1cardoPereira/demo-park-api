@@ -12,6 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.r1cardoPereira.demoparkapi.web.dto.ClienteCreateDto;
 import com.r1cardoPereira.demoparkapi.web.dto.ClienteResponseDto;
+import com.r1cardoPereira.demoparkapi.web.dto.PageableDto;
 import com.r1cardoPereira.demoparkapi.web.exception.ErrorMessage;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -226,20 +227,35 @@ public class ClienteIT {
         }
 
         @Test
-        public void buscarClientes_ListarClientesComPerfilAdmin_RetornarListaDeClientesComStatus200(){
+        public void buscarClientes_ListarClientesComPaginacaoPeloAdmin_RetornarClientesComStatus200(){
                 
-                List<ClienteResponseDto> responseBody = testClient
+                PageableDto responseBody = testClient
                                 .get()
                                 .uri("api/v1/clientes")
                                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@email.com",
                                                 "123456"))
                                 .exchange()
                                 .expectStatus().isOk()
-                                .expectBodyList(ClienteResponseDto.class)
+                                .expectBody(PageableDto.class)
                                 .returnResult().getResponseBody();
 
                 Assertions.assertThat(responseBody).isNotNull();
-                Assertions.assertThat(responseBody.size()).isEqualTo(1);
+                Assertions.assertThat(responseBody.getTotalElements()).isEqualTo(2);
+                Assertions.assertThat(responseBody.getNumber()).isEqualTo(0);
+
+                responseBody = testClient
+                                .get()
+                                .uri("api/v1/clientes")
+                                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@email.com",
+                                                "123456"))
+                                .exchange()
+                                .expectStatus().isOk()
+                                .expectBody(PageableDto.class)
+                                .returnResult().getResponseBody();
+
+                Assertions.assertThat(responseBody).isNotNull();
+                Assertions.assertThat(responseBody.getContent().size()).isEqualTo(2);
+                Assertions.assertThat(responseBody.getTotalElements()).isEqualTo(2);
         }
 
         @Test
