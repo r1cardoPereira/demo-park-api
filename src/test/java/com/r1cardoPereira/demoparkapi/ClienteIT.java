@@ -256,6 +256,7 @@ public class ClienteIT {
                 Assertions.assertThat(responseBody).isNotNull();
                 Assertions.assertThat(responseBody.getContent().size()).isEqualTo(2);
                 Assertions.assertThat(responseBody.getTotalElements()).isEqualTo(2);
+                Assertions.assertThat(responseBody.getNumber()).isEqualTo(0);
         }
 
         @Test
@@ -273,6 +274,42 @@ public class ClienteIT {
 
                 Assertions.assertThat(responseBody).isNotNull();
                 Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+        }
+
+        @Test
+        public void recuperarDadosDeCLienteAutenticado_RetornarClienteComStatus200(){
+
+                ClienteResponseDto responsebody = testClient
+                        .get()
+                        .uri("api/v1/clientes/detalhes")
+                        .headers(JwtAuthentication.getHeaderAuthorization(testClient, "client@email.com", "123456"))
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBody(ClienteResponseDto.class)
+                        .returnResult().getResponseBody();
+
+                Assertions.assertThat(responsebody).isNotNull();
+                Assertions.assertThat(responsebody.getNome()).isEqualTo("Cliente um");
+                Assertions.assertThat(responsebody.getCpf()).isEqualTo("32268430014");
+                Assertions.assertThat(responsebody.getId()).isEqualTo(10);
+
+        }
+
+        @Test
+        public void recuperarDadosDeClienteEmUrlDetalhesComPerfilAdmin_RetornarErrorMessageComStatus403(){
+
+                ErrorMessage responsebody = testClient
+                        .get()
+                        .uri("api/v1/clientes/detalhes")
+                        .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@email.com", "123456"))
+                        .exchange()
+                        .expectStatus().isForbidden()
+                        .expectBody(ErrorMessage.class)
+                        .returnResult().getResponseBody();
+
+                Assertions.assertThat(responsebody).isNotNull();
+                Assertions.assertThat(responsebody.getStatus()).isEqualTo(403);
+
         }
 }
 

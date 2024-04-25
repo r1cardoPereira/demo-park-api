@@ -1,1 +1,4 @@
-com/r1cardoPereira/demoparkapi/UsuarioIT.class
+com\r1cardoPereira\demoparkapi\UsuarioIT.class
+com\r1cardoPereira\demoparkapi\JwtAuthentication.class
+com\r1cardoPereira\demoparkapi\AutenticacaoIT.class
+com\r1cardoPereira\demoparkapi\ClienteIT.class

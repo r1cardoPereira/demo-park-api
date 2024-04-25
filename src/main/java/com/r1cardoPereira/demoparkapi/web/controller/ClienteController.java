@@ -1,8 +1,6 @@
 package com.r1cardoPereira.demoparkapi.web.controller;
 
 
-
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -160,6 +158,31 @@ public class ClienteController {
 
         Page<ClienteProjection> clientes = clienteService.buscarTodos(pageable);
         return ResponseEntity.ok(PageableMapper.toDto(clientes));
+
+    }
+
+    @Operation(
+            summary = "Recuperar dados de cliente autenticado",
+            security = @SecurityRequirement(name ="Security"),
+            description = "Requisição exige Bearer Token. Acesso Restrito a CLIENTE.",
+
+        responses = {
+
+        @ApiResponse(responseCode = "200", description = "Clientes recuperado com sucesso.",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ClienteCreateDto.class))),
+
+        @ApiResponse(responseCode = "403", description = "Recurso não permitido ao perfil ADMIN",
+                content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorMessage.class))),
+    })
+
+    @GetMapping("/detalhes")
+    @PreAuthorize(value = "hasRole('CLIENTE')")
+    public ResponseEntity<ClienteResponseDto> getDetalhes(@AuthenticationPrincipal JwtUserDetails userDetails) {
+        Cliente cliente = clienteService.buscarPorUsuario(userDetails.getId());
+
+        return ResponseEntity.ok(ClienteMapper.toDto(cliente));
 
     }
 
