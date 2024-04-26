@@ -32,4 +32,6 @@ public class ClienteCreateDto {
     @Size(min = 11, max = 11, message = "Digite apenas os nomeros do seu CPF")
     @CPF
     private String cpf;
+
+
 }
