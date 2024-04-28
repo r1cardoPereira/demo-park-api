@@ -37,11 +37,16 @@ public class VagaController {
     @Operation(
         summary = "Criar uma nova Vaga",
         description = "Recurso para criar nova vaga, exige autenticação de ADMIN",
+        security = @SecurityRequirement(name ="Security"),
         responses = {
 
             @ApiResponse(responseCode = "201", description = "Recurso criado com sucesso",
                     headers = @Header(name = HttpHeaders.LOCATION,description = "URL do recurso criado")),
 
+
+            @ApiResponse(responseCode = "403", description = "Recurso disponivel somente para usuario com perfil 'ADMIN'",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class))),
 
             @ApiResponse(responseCode = "409", description = "Vaga já cadastrada",
                     content = @Content(mediaType = "application/json",
@@ -70,11 +75,16 @@ public class VagaController {
     @Operation(
         summary = "Recuperar uma vaga",
         description = "Recuperar uma Vaga apartir do codigo, recurso disponivel somente para ADMIN",
+        security = @SecurityRequirement(name ="Security"),
         responses = {
 
             @ApiResponse(responseCode = "200", description = "Recurso encontrado com sucesso",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = VagaResponseDto.class))),
+
+            @ApiResponse(responseCode = "403", description = "Recurso disponivel somente para usuario com perfil 'ADMIN'",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorMessage.class))),
 
             @ApiResponse(responseCode = "404", description = "Vaga não localizada.",
                     content = @Content(mediaType = "application/json",
@@ -82,7 +92,7 @@ public class VagaController {
             })
 
 
-    @GetMapping
+    @GetMapping("/{codigo}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<VagaResponseDto> getByCodigo(@PathVariable String codigo){
 
