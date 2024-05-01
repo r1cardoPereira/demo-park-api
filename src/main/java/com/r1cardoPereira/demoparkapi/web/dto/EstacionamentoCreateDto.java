@@ -11,12 +11,13 @@ import org.hibernate.validator.constraints.br.CPF;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 public class EstacionamentoCreateDto {
 
     @NotBlank
     @Size(min = 8,max = 8)
-    @Pattern(regexp = "[A-Z]{3}-[0-9]{4}", message = "A Plaga deve seguir o padrão XXX-000")
+    @Pattern(regexp = "[A-Z]{3}-[0-9]{4}", message = "A Plaga deve seguir o padrão 'XXX-0000'")
     private String placa;
     @NotBlank
     private String marca;

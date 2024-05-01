@@ -1,6 +1,8 @@
 package com.r1cardoPereira.demoparkapi.web.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.r1cardoPereira.demoparkapi.entity.Vaga;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EstacionamentoResponseDto {
 
 
@@ -33,8 +36,10 @@ public class EstacionamentoResponseDto {
 
     private String recibo;
 
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime dataEntrada;
 
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime dataSaida;
 
     private String codigoVaga;

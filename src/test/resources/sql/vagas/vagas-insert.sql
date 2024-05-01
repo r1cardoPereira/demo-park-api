@@ -12,6 +12,10 @@ VALUES (
 
 
 
+
+
+
+
 INSERT INTO
     VAGAS (id, codigo, status)
 VALUES (
@@ -23,3 +27,9 @@ INSERT INTO
 VALUES (
         20, 'V-10', 'OCUPADA'
     );
+
+
+
+
+
+

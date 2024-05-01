@@ -25,28 +25,28 @@ public class ClienteVaga {
     @Column(name = "numero_recibo", nullable = false, unique = true, length = 15)
     private String recibo;
 
-    @Column(name = "placa", nullable = false,length = 8)
+    @Column(name = "placa", nullable = false, length = 8)
     private String placa;
 
-    @Column(name = "marca", nullable = false,length = 45)
+    @Column(name = "marca", nullable = false, length = 45)
     private String marca;
 
-    @Column(name = "modelo", nullable = false,length = 45)
+    @Column(name = "modelo", nullable = false, length = 45)
     private String modelo;
 
-    @Column(name = "cor", nullable = false,length = 45)
+    @Column(name = "cor", nullable = false, length = 45)
     private String cor;
 
-    @Column(name = "data_entrada",nullable = false)
+    @Column(name = "data_entrada", nullable = false)
     private LocalDateTime dataEntrada;
 
     @Column(name = "data_saida")
     private LocalDateTime dataSaida;
 
-    @Column(name = "valor",columnDefinition = "decimal(7,2)")
+    @Column(name = "valor", columnDefinition = "decimal(7,2)")
     private BigDecimal valor;
 
-    @Column(name = "desconto",columnDefinition = "decimal(7,2)")
+    @Column(name = "desconto", columnDefinition = "decimal(7,2)")
     private BigDecimal desconto;
 
 
