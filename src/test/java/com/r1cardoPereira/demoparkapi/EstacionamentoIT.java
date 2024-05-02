@@ -398,5 +398,79 @@ public class EstacionamentoIT {
 
     }
 
+    @Test
+    public void buscarCheckin_ComPerfilAdmin_RetornarDadosComStatus200(){
+
+        testClient
+                .get()
+                .uri("/api/v1/estacionamentos/check-in/{recibo}","20240501-095400")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@email.com",
+                        "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("placa").isEqualTo("FRD-1234")
+                .jsonPath("marca").isEqualTo("FORD")
+                .jsonPath("modelo").isEqualTo("ECOSPORT")
+                .jsonPath("cor").isEqualTo("Preto")
+                .jsonPath("clienteCpf").isEqualTo("32268430014")
+                .jsonPath("recibo").isEqualTo("20240501-095400")
+                .jsonPath("dataEntrada").isEqualTo("2024-05-01 09:54:00")
+                .jsonPath("codigoVaga").isEqualTo("T-04");
+
+
+
+
+    }
+
+    @Test
+    public void buscarCheckin_ComPerfilCliente_RetornarDadosComStatus200(){
+
+        testClient
+                .get()
+                .uri("/api/v1/estacionamentos/check-in/{recibo}","20240501-095400")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "client@email.com",
+                        "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("placa").isEqualTo("FRD-1234")
+                .jsonPath("marca").isEqualTo("FORD")
+                .jsonPath("modelo").isEqualTo("ECOSPORT")
+                .jsonPath("cor").isEqualTo("Preto")
+                .jsonPath("clienteCpf").isEqualTo("32268430014")
+                .jsonPath("recibo").isEqualTo("20240501-095400")
+                .jsonPath("dataEntrada").isEqualTo("2024-05-01 09:54:00")
+                .jsonPath("codigoVaga").isEqualTo("T-04");
+
+
+
+
+    }
+
+    @Test
+    public void buscarCheckin_ComReciboInexistente_RetornarErrorComStatus404(){
+
+        testClient
+                .get()
+                .uri("/api/v1/estacionamentos/check-in/{recibo}","20240501-095499")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "client@email.com",
+                        "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("status").isEqualTo("404")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-in/20240501-095499")
+                .jsonPath("method").isEqualTo("GET");
+
+
+
+
+
+    }
+
+
+
+
 
 }

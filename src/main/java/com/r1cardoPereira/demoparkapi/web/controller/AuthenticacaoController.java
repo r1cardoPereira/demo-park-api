@@ -28,14 +28,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Tag(name = "Autenticação", description = "Recurso para proceder com a autenticação na API" )
 
-@Slf4j // Anotação do Lombok para criar um logger SLF4J.
-@RequiredArgsConstructor // Anotação do Lombok para gerar um construtor com parâmetros obrigatórios (final ou @NonNull).
-@RestController // Anotação do Spring para indicar que essa classe é um controlador REST.
-@RequestMapping("/api/v1") // Anotação do Spring para mapear requisições web para esse controlador usando o caminho especificado.
-public class AuthenticacaoController { // Declaração da classe AuthenticacaoController.
+@Slf4j
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/v1")
+public class AuthenticacaoController {
 
-    private final JwtUserDetailsService detailsService; // Injeção de dependência para o serviço de detalhes do usuário JWT.
-    private final AuthenticationManager authenticationManager; // Injeção de dependência para o gerenciador de autenticação.
+    private final JwtUserDetailsService detailsService;
+    private final AuthenticationManager authenticationManager;
 
 @Operation(
         summary = "Autenticar API",
@@ -57,22 +57,22 @@ public class AuthenticacaoController { // Declaração da classe AuthenticacaoCo
                 schema = @Schema(implementation = ErrorMessage.class)))
             })
 
-    @PostMapping("/auth") // Anotação do Spring para mapear requisições POST para o método autenticar().
-    public ResponseEntity<?> autenticar(@RequestBody @Valid UsuarioLoginDto dto, HttpServletRequest request ){ // Método para autenticar um usuário.
+    @PostMapping("/auth")
+    public ResponseEntity<?> autenticar(@RequestBody @Valid UsuarioLoginDto dto, HttpServletRequest request ){
 
-        log.info("Processo de autenticação pelo login {}", dto.getUsername()); // Log de informação sobre o processo de autenticação.
+        log.info("Processo de autenticação pelo login {}", dto.getUsername());
         try{
-            UsernamePasswordAuthenticationToken authenticationToken = // Criação de um token de autenticação com nome de usuário e senha.
+            UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword());
-                authenticationManager.authenticate(authenticationToken); // Autenticação do token.
-                JwtToken token = detailsService.getTokenAuthenticated(dto.getUsername()); // Obtenção do token JWT para o usuário autenticado.
-                return ResponseEntity.ok(token); // Retorno do token JWT em caso de sucesso na autenticação.
+                authenticationManager.authenticate(authenticationToken);
+                JwtToken token = detailsService.getTokenAuthenticated(dto.getUsername());
+                return ResponseEntity.ok(token);
 
-        }catch(AuthenticationException ex){ // Captura de exceções de autenticação.
-            log.warn("Bad credentials from username ", dto.getUsername()); // Log de aviso sobre credenciais inválidas.
+        }catch(AuthenticationException ex){
+            log.warn("Bad credentials from username ", dto.getUsername());
         }
 
-        return ResponseEntity // Retorno de uma resposta de erro em caso de falha na autenticação.
+        return ResponseEntity
                 .badRequest()
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST,"Credenciais inválidas."));
 
