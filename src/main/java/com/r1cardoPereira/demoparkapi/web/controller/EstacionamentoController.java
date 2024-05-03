@@ -79,10 +79,6 @@ public class EstacionamentoController {
                 .buildAndExpand(clienteVaga.getRecibo())
                 .toUri();
         return ResponseEntity.created(location).body(responseDto);
-
-
-
-
     }
 
     @Operation(
@@ -115,7 +111,41 @@ public class EstacionamentoController {
         ClienteVaga clienteVaga = clienteVagaService.buscarPorRecibo(recibo);
         EstacionamentoResponseDto dto = ClienteVagaMapper.toDto(clienteVaga);
         return ResponseEntity.ok(dto);
+    }
 
+    @Operation(
+            summary = "Localizar um veiculo no estacionamento",
+            description = "Recurso para retornar um no estacionamento." +
+                    "pelo n recibo. Requisição exige uso de um Bearer Token  ",
+            security = @SecurityRequirement(name ="Security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.PATH, name = "recibo",
+                            description = "Numero do recibo gerado no check-in")
+            },
+            responses = {
+
+                    @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
+
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = EstacionamentoResponseDto.class))
+                    ),
+                    @ApiResponse(responseCode = "403", description = "Recurso não permitido para perfil CLIENTE",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+
+                    @ApiResponse(responseCode = "404", description = "Numero de recibo não encontrado",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            })
+    @PutMapping("/check-out/{recibo}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<EstacionamentoResponseDto> checkOut(@PathVariable String recibo){
+
+        ClienteVaga clienteVaga = estacionamentoService.checkOut(recibo);
+        EstacionamentoResponseDto dto = ClienteVagaMapper.toDto(clienteVaga);
+        return ResponseEntity.ok(dto);
     }
 
 }
