@@ -1,6 +1,7 @@
 package com.r1cardoPereira.demoparkapi;
 
 import com.r1cardoPereira.demoparkapi.web.dto.EstacionamentoCreateDto;
+import com.r1cardoPereira.demoparkapi.web.dto.PageableDto;
 import com.r1cardoPereira.demoparkapi.web.exception.ErrorMessage;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,7 @@ public class EstacionamentoIT {
                 .jsonPath("clienteCpf").isEqualTo("32268430014")
                 .jsonPath("recibo").exists()
                 .jsonPath("dataEntrada").exists()
-                .jsonPath("codigoVaga").exists();
+                .jsonPath("vagaCodigo").exists();
 
 
 
@@ -416,7 +417,7 @@ public class EstacionamentoIT {
                 .jsonPath("clienteCpf").isEqualTo("32268430014")
                 .jsonPath("recibo").isEqualTo("20240501-095400")
                 .jsonPath("dataEntrada").isEqualTo("2024-05-01 09:54:00")
-                .jsonPath("codigoVaga").isEqualTo("T-04");
+                .jsonPath("vagaCodigo").isEqualTo("T-04");
 
 
 
@@ -441,7 +442,7 @@ public class EstacionamentoIT {
                 .jsonPath("clienteCpf").isEqualTo("32268430014")
                 .jsonPath("recibo").isEqualTo("20240501-095400")
                 .jsonPath("dataEntrada").isEqualTo("2024-05-01 09:54:00")
-                .jsonPath("codigoVaga").isEqualTo("T-04");
+                .jsonPath("vagaCodigo").isEqualTo("T-04");
 
 
 
@@ -482,7 +483,7 @@ public class EstacionamentoIT {
                 .jsonPath("clienteCpf").isEqualTo("32268430014")
                 .jsonPath("recibo").isEqualTo("20240501-095400")
                 .jsonPath("dataEntrada").isEqualTo("2024-05-01 09:54:00")
-                .jsonPath("codigoVaga").isEqualTo("T-04")
+                .jsonPath("vagaCodigo").isEqualTo("T-04")
                 .jsonPath("dataSaida").exists()
                 .jsonPath("valor").exists()
                 .jsonPath("desconto").exists();
@@ -520,8 +521,86 @@ public class EstacionamentoIT {
                 .jsonPath("method").isEqualTo("PUT");
     }
 
+    @Test
+    public void buscarEstacionamentos_PorClinteCpf_RetornarSucessoComStatus200(){
+
+        PageableDto responseBody;
+        responseBody = testClient
+                .get()
+                .uri("/api/v1/estacionamentos/cpf/{cpf}?size=1&page=0", "32268430014")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@email.com",
+                        "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getContent().size()).isEqualTo(1);
+        Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(1);
+        Assertions.assertThat(responseBody.getNumber()).isEqualTo(0);
+        Assertions.assertThat(responseBody.getSize()).isEqualTo(1);
+
+    }
+
+    @Test
+    public void buscarEstacionamentos_ComCredenciaisDeCliente_RetornarErrorComStatus403(){
+
+        testClient
+                .get()
+                .uri("/api/v1/estacionamentos/cpf/{cpf}","32268430014")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "client@email.com",
+                        "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody()
+                .jsonPath("status").isEqualTo("403")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/cpf/32268430014")
+                .jsonPath("method").isEqualTo("GET");
+    }
+
+    @Test
+    public void buscarEstacionamentos_DoClienteLogado_RetornarSucessoComStatus200(){
+
+        PageableDto responseBody = testClient
+                .get()
+                .uri("/api/v1/estacionamentos?size=1&page=0")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "client@email.com",
+                        "123456"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getContent().size()).isEqualTo(1);
+        Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(1);
+        Assertions.assertThat(responseBody.getNumber()).isEqualTo(0);
+        Assertions.assertThat(responseBody.getSize()).isEqualTo(1);
+    }
+
+
+    @Test
+    public void buscarEstacionamentos_ComCredenciaisDeAdmin_RetornarErrorMessageComStatus403(){
+
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/estacionamentos?size=1&page=0")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "admin@email.com",
+                        "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+
+        Assertions.assertThat(responseBody).isNotNull();
+        Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+    }
 
 
 
 
 }
+
