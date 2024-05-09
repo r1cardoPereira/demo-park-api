@@ -4,8 +4,10 @@ package com.r1cardoPereira.demoparkapi.web.controller;
 import com.r1cardoPereira.demoparkapi.entity.ClienteVaga;
 import com.r1cardoPereira.demoparkapi.jwt.JwtUserDetails;
 import com.r1cardoPereira.demoparkapi.repository.projection.ClienteVagaProjection;
+import com.r1cardoPereira.demoparkapi.service.ClienteService;
 import com.r1cardoPereira.demoparkapi.service.ClienteVagaService;
 import com.r1cardoPereira.demoparkapi.service.EstacionamentoService;
+import com.r1cardoPereira.demoparkapi.service.JasperService;
 import com.r1cardoPereira.demoparkapi.web.dto.EstacionamentoCreateDto;
 import com.r1cardoPereira.demoparkapi.web.dto.EstacionamentoResponseDto;
 import com.r1cardoPereira.demoparkapi.web.dto.PageableDto;
@@ -21,6 +23,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,12 +31,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 
 @Tag(name = "Estacionamentos", description = "Operações de registro de entrada e saida de um veiculo do estacionamento.")
@@ -44,6 +49,8 @@ public class EstacionamentoController {
 
     private final EstacionamentoService estacionamentoService;
     private final ClienteVagaService clienteVagaService;
+    private final ClienteService clienteService;
+    private final JasperService jasperService;
 
     @Operation(
             summary = "Oparação de check-in",
@@ -123,9 +130,9 @@ public class EstacionamentoController {
     }
 
     @Operation(
-            summary = "Localizar um veiculo no estacionamento",
-            description = "Recurso para retornar um no estacionamento." +
-                    "pelo n recibo. Requisição exige uso de um Bearer Token  ",
+            summary = "Operação de check-out",
+            description = "Recurso para dar saída de um veículo do estacionamento. " +
+                    "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
             security = @SecurityRequirement(name ="Security"),
             parameters = {
                     @Parameter(in = ParameterIn.PATH, name = "recibo",
@@ -133,7 +140,7 @@ public class EstacionamentoController {
             },
             responses = {
 
-                    @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
+                    @ApiResponse(responseCode = "200", description = "Recurso atualizado com sucesso",
 
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = EstacionamentoResponseDto.class))
@@ -143,7 +150,8 @@ public class EstacionamentoController {
                                     schema = @Schema(implementation = ErrorMessage.class))
                     ),
 
-                    @ApiResponse(responseCode = "404", description = "Numero de recibo não encontrado",
+                    @ApiResponse(responseCode = "404", description = "Número do recibo inexistente ou " +
+                                                                     "o veículo já passou pelo check-out.",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorMessage.class))
                     )
@@ -238,6 +246,24 @@ public class EstacionamentoController {
         Page<ClienteVagaProjection> projection = clienteVagaService.buscarTodosPorUsuarioId(user.getId(), pageable);
         PageableDto dto = PageableMapper.toDto(projection);
         return ResponseEntity.ok(dto);
+
+    }
+
+
+    @GetMapping("/relatorio")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<Void> getRelatorio(HttpServletResponse response, @AuthenticationPrincipal JwtUserDetails user) throws IOException {
+        String cpf = clienteService.buscarPorUsuario(user.getId()).getCpf();
+        jasperService.addParams("CPF", cpf);
+
+        byte[] bytes = jasperService.gerarPdf();
+
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader("Content-disposition", "inline; filename=" + System.currentTimeMillis() +".pdf");
+        response.getOutputStream().write(bytes);
+
+
+        return  ResponseEntity.ok().build();
 
     }
 
